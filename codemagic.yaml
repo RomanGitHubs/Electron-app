@@ -1,0 +1,23 @@
+workflows:
+  linux-build:
+    name: Linux Build
+    instance_type: linux
+    environment:
+      groups:
+        - prod    
+      node: 16.14.0
+    
+    scripts: 
+      - name: Injecting env vars
+        script: echo "REACT_APP_API_KEY=$REACT_APP_API_KEY" >> .env
+      - name: Installing packages
+        script: yarn install
+      - name: Installing RPM to build for arch linux
+        script: sudo apt install rpm -y
+      - name: Building Applications
+        script: yarn make-linux
+
+    artifacts:
+      - out/make/deb/x64/*.deb
+      - out/make/rpm/x64/*.rpm
+      - out/make/zip/linux/x64/*.zip
